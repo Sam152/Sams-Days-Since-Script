@@ -89,7 +89,12 @@ if(isset($_GET['id'])){
 		)
 	));
 
-	// Pass the timestamp to the browser
+	// If there is no matching row, go back to the index.
+	if(!$event){
+		header('Location: /');
+	}
+
+	// Pass the timestamp to the browser.
 	$config['timestamp'] = $event['timestamp'];
 
 }
