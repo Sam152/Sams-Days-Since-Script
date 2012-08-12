@@ -66,6 +66,31 @@ if(isset($_POST['create_new_time'])){
 		)
 	);
 
+	// Get the last ID.
+	$id = $database->lastId();
+
+	// Redirect to the newly created event page.
+	header('Location: ?id='.$id);
+
+}
+
+
+// If we are viewing an event.
+if(isset($_GET['id'])){
+
+	// Set a flag for later use in the body
+	$show_event = TRUE;
+
+	// Get the event from the database.
+	$event = mysql_fetch_array($database->query(
+		"SELECT * FROM `events` WHERE `id` = ':id'",
+		array(
+			':id' => $_GET['id']
+		)
+	));
+
+	// Pass the timestamp to the browser
+	$config['timestamp'] = $event['timestamp'];
 
 }
 
@@ -81,7 +106,7 @@ if(isset($_POST['create_new_time'])){
 
 		<script type="text/javascript">
 			<? foreach($config as $name => $value): ?>
-				var <?=$name; ?> = <?=$value ? 'true' : 'false'; ?>;
+				var <?=$name; ?> = <?=($value === TRUE) ? 'true' : ($value === FALSE ? 'false' : $value); ?>;
 			<? endforeach ?>
 		</script>
 
@@ -91,15 +116,34 @@ if(isset($_POST['create_new_time'])){
 	</head>
 	<body>
 
-		<form method="post" id="create">
+		<?php if($show_event): ?>
 
-			<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="text" name="event_time" placeholder="Time of event">
-			was the last time  
-			<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="text" maxlength="200" name="event_name" placeholder="Name of Event">
-			<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="text" name="website" placeholder="website">
-			<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="submit" name="create_new_time" value="submit">
-			<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="hidden" name="password" value="false">
-		</form>
+
+		<div id="counter">
+			<div id="numbers">
+			</div>
+		
+			<div id="since">
+				since <?=$event['name']; ?>
+			</div>
+		</div>
+
+
+
+		<?php else: ?>
+
+
+			<form method="post" id="create">
+
+				<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="text" name="event_time" placeholder="Date/Time String">
+				was the last time  
+				<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="text" maxlength="200" name="event_name" placeholder="Name of Event">
+				<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="text" name="website" placeholder="website">
+				<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="submit" name="create_new_time" value="submit">
+				<input <?=!$config['accept_new_events'] ? 'disabled' : ''; ?> type="hidden" name="password" value="false">
+			</form>
+
+		<?php endif; ?>
 
 	</body>
 </html>

@@ -38,3 +38,22 @@ input[name=website]{
 	position:absolute;
 	left:-9999px;
 }
+
+#counter{
+	text-align:center;
+	font-size:28px;
+	position:absolute;
+	top:40%;
+	width:100%;
+	margin-top:-128px;
+}
+
+#counter .days{
+	display:block;
+	font-size:120px;
+}
+
+#counter #since{
+	margin-top:40px;
+	font-size:39px;
+}
